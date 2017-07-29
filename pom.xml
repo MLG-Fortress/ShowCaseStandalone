@@ -4,21 +4,10 @@
   <artifactId>ShowCaseStandalone</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>ShowCaseStandalone</name>
-  <description>Plugin for Bukkits Minecraft Api</description>
+  <description>Forked version of a cool, non-NMS-dependent player shop plugin</description>
   
   
   <properties>
-      <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
-      
-      <build.number>${maven.build.timestamp}-custom</build.number>
-      <build.date>${maven.build.timestamp}</build.date>
-      <build.builder>UNKNOWN</build.builder>
-      
-      
-      <repository.url.host>https://dl.tallbyte.com/</repository.url.host>
-      <repository.url.path>pub/mvn/</repository.url.path>
-      <repository.url>${repository.url.host}${repository.url.path}</repository.url>
-
       <version.java.source>1.8</version.java.source>
       <version.java.output>1.8</version.java.output>
   </properties>
@@ -27,7 +16,15 @@
   
   <build>
     <sourceDirectory>src</sourceDirectory>
+    <finalName>${project.name}</finalName>
     <resources>
+        <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <filtering>true</filtering>
+            <includes>
+                <include>plugin.yml</include>
+            </includes>
+        </resource>
       <resource>
         <directory>src</directory>
         <includes>
@@ -125,29 +122,6 @@
                   </goals>
               </execution>
           </executions>
-          <configuration>
-              <file>${project.basedir}/target/classes/plugin.yml</file>
-              <replacements>
-                  <replacement>
-                      <token>version: ([-]?[\d.]+)*</token>
-                      <value>version: ${build.number}</value>
-                  </replacement>
-                  
-                  <replacement>
-                      <token>build-date: unknown</token>
-                      <value>build-date: ${build.date}</value>
-                  </replacement>
-                  
-                  <replacement>
-                      <token>builder: unknown</token>
-                      <value>builder: ${build.builder}</value>
-                  </replacement>
-              </replacements>
-              
-              <regexFlags>
-                  <regex>MULTILINE</regex>
-              </regexFlags>
-          </configuration>
       </plugin>
       
       
@@ -166,38 +140,7 @@
                   </configuration>
               </execution>
           </executions>
-      </plugin>
-      
-      
-      
-      <!-- copy metrics into this jar -->
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>2.3</version>
-            <configuration>
-                <artifactSet>
-                    <includes>
-                        <include>org.mcstats.*:*</include>
-                    </includes>
-                </artifactSet>
-                <relocations>
-                    <relocation>
-                        <pattern>org.mcstats</pattern>
-                        <shadedPattern>com.kellerkindt.scs.internals</shadedPattern>
-                    </relocation>
-                </relocations>
-            </configuration>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>shade</goal>
-                    </goals>
-                </execution>
-            </executions>
-        </plugin>
-      
+      </plugin>      
     </plugins>
   </build>
   
@@ -205,11 +148,6 @@
       <repository>
           <id>spigot-repo</id>
           <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-      </repository>
-      
-      <repository>
-          <id>Plugin Metrics</id>
-          <url>http://repo.mcstats.org/content/repositories/public</url>
       </repository>
       
       <!-- essentials -->
@@ -228,11 +166,6 @@
       <repository>
           <id>sk89q</id>
           <url>http://maven.sk89q.com/artifactory/libs-snapshot-local/</url>
-      </repository>
-
-      <repository>
-          <id>minebuilders-repo</id>
-          <url>http://minebuilders.me:8080/plugin/repository/everything/</url>
       </repository>
   </repositories>
   
@@ -284,15 +217,7 @@
           <artifactId>worldguard</artifactId>
           <scope>provided</scope>
           <version>6.1.1-SNAPSHOT</version>
-      </dependency>
-
-      <dependency>
-          <groupId>me.minebuilders</groupId>
-          <artifactId>clearlag-core</artifactId>
-          <version>2.9.0-SNAPSHOT</version>
-      </dependency>
-
-      
+      </dependency>      
       
       <!-- local -->
       <dependency>
@@ -416,13 +341,4 @@
       </pluginRepositories>
     </profile>
   </profiles>
-  
-  
-  <distributionManagement>
-          <repository>
-             <id>tallbyte-repository</id>
-             <url>${repository.url}</url>
-          </repository>
-  </distributionManagement>
-
 </project>
