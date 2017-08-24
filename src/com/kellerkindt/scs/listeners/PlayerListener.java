@@ -23,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -47,7 +48,7 @@ public class PlayerListener implements Listener {
      * Cancel pickup of a Item if the item is a shop Item
      */
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerPickupItem (PlayerPickupItemEvent pe) {
+    public void onEntityPickupItem (EntityPickupItemEvent pe) {
         if ( scs.getShopHandler().isShopItem(pe.getItem()) ) {
             pe.setCancelled(true);                
         }

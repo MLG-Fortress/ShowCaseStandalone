@@ -51,7 +51,6 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +69,6 @@ public class ShowCaseStandalone extends JavaPlugin {
     private Permission  permission         = null;
     private Balance     balance            = null;
 
-    private Metrics                 metrics         = null;
     private MetricsHandler          metricsHandler  = null;
     private ShopHandler             shopHandler     = null;
     private PlayerSessionHandler    sessionHandler  = null;
@@ -261,36 +259,6 @@ public class ShowCaseStandalone extends JavaPlugin {
         setCreatePermission(BuyShop     .class, Properties.PERMISSION_CREATE_BUY);
         setCreatePermission(DisplayShop .class, Properties.PERMISSION_CREATE_DISPLAY);
         setCreatePermission(ExchangeShop.class, Properties.PERMISSION_CREATE_EXCHANGE);
-        
-
-        
-
-        try {
-            logger.info("Initilazing Metrics");
-            // init metrics
-            this.metrics    = new Metrics(this);
-            
-            // does the server owner want to use this?
-            if (!metrics.isOptOut()) {
-                
-                // init handler
-                this.metricsHandler = new MetricsHandler(shopHandler, metrics);
-                
-                // add listener
-                registerEvents(metricsHandler);
-                
-                // start metrics
-                this.metrics.start();
-                
-                logger.info("Metrics successfully initialized");
-            } else {
-                logger.info("Metrics is deactivated, ShowCaseStandalone respects your decision and won't use Metrics");
-            }
-        
-        } catch (IOException ioe) {
-            logger.log(Level.WARNING, "Couldn't activate metrics. This won't affect the functionality of "+getDescription().getName(), ioe);
-        }
-        
 
 
         if (Properties.BUILD_ISDEV) {
@@ -1057,11 +1025,6 @@ public class ShowCaseStandalone extends JavaPlugin {
     public void hookInto (Plugin plugin) {
         String className    = plugin.getClass().getName();
 
-        if (className.equals("me.minebuilders.clearlag.Clearlag")) {
-            registerEvents(new ClearLagListener(this, plugin));
-            logger.info("Hooked into ClearLag");
-        }
-
         // WorldGuard
         if (className.equals("com.sk89q.worldguard.bukkit.WorldGuardPlugin")) {
             registerEvents(new WorldGuardListener(this, plugin));
@@ -1072,41 +1035,6 @@ public class ShowCaseStandalone extends JavaPlugin {
         if (className.equals("com.earth2me.essentials.Essentials") && isAllowedEconomySystem(className)) {
             logger.info("Hooked into EssentialsEconomy");
             this.balance    = new EssentialsBalance(this, plugin);
-        }
-        
-        // iConomy 5
-        if (className.equals("com.iConomy.iConomy") && isAllowedEconomySystem(className)) {
-            logger.info("Hooked into iConomy5");
-            this.balance = new iConomy5Balance (this, plugin);
-        }
-        
-        // iConomy 6
-        if (className.equals("com.iCo6.iConomy") && isAllowedEconomySystem(className)) {
-            logger.info("Hooked into iConomy6");
-            this.balance = new iConomy6Balance (this, plugin);
-        }
-        
-        // iConomy
-        if (className.equals("com.iCo8.iConomy") && isAllowedEconomySystem(className)) {
-            logger.info("Hooked into iConomy8");
-            this.balance = new iConomy8Balance (this, plugin);
-        }
-        
-        // BOSEconomy
-        if (className.equals("cosine.boseconomy.BOSEconomy") && isAllowedEconomySystem(className)) {
-            logger.info("Hooked into BOSEconomy");
-            this.balance = new BOSEconomyBalance (this, plugin);
-        }
-        // Towny
-        if (className.equals("com.palmergames.bukkit.towny.Towny")) {
-            logger.info("Hooked into Towny");
-            registerEvents(new TownyListener(this));
-        }
-        
-        // Residence
-        if (className.equals("com.bekvon.bukkit.residence.Residence") && getConfiguration().getResidenceHookInto()) {
-            logger.info("Hooked into Residence");
-            registerEvents(new ResidenceListener(this));
         }
 
         // FBascis, need to workaround Anti-InventoryDupe thingy
@@ -1129,27 +1057,6 @@ public class ShowCaseStandalone extends JavaPlugin {
                     permission = permissionProvider.getProvider();
             }
         }
-        
-        //Attach to DropChest API, if loaded
-        if (className.equals("com.narrowtux.dropchest.dropchest")){
-            logger.info("Found Old DropChest.  Attempting to hook api.");
-
-            try {
-                registerEvents(new DropChestListener(this));
-                logger.info("Hooked OLD DropChest listener.");
-            } catch (Exception e) {}
-        }
-        
-        //This supports a fork that was done to upgrade DC to 1.1. 
-        if (className.equals("com.noheroes.dropchest.dropchest")){
-            logger.info("Found New DropChest.  Attempting to hook api.");
-            try{ 
-                registerEvents(new DropChestListenerV2(this));
-                logger.info("Hooked NEW DropChest listener.");
-            } catch (Exception e){}
-        }
-        
-        
     }
     
     /**
@@ -1158,21 +1065,6 @@ public class ShowCaseStandalone extends JavaPlugin {
      */
     public void unHookPlugin (Plugin plugin) {
         String className    = plugin.getClass().getName();
-        
-        if (className.equals("com.iConomy.iConomy")) {
-            logger.info("Un-hooked iConomy");
-            this.balance = new DummyBalance(this);
-        }
-        
-        if (className.equals("com.iCo6.iConomy")) {
-            logger.info("Un-hooked iConomy");
-            this.balance = new DummyBalance(this);
-        }
-        
-        if (className.equals("com.iCo8.iConomy")) {
-            logger.info("Un-hooked iConomy");
-            this.balance = new DummyBalance(this);
-        }
         
         if (this.permission != null) {
             if (!this.permission.isEnabled()) {
