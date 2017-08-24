@@ -738,6 +738,8 @@ public class SimpleShopHandler implements ShopHandler, Listener {
         Location     spawnLocation    = event.getLocation();
         ItemStack    itemStack        = shop.getItemStack().clone();
 
+        itemStack.setAmount(1);
+
         //changing the itemStack size to 0 will mysteriously turn the itemstack into AIR... must be a recent spigot change?
 //        if (scs.getConfiguration().isSpawningToMax()) {
 //            itemStack.setAmount(itemStack.getMaxStackSize());
