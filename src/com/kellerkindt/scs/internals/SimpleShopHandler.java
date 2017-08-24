@@ -754,6 +754,10 @@ public class SimpleShopHandler implements ShopHandler, Listener {
             }
         }
 
+        //This has been occurring recently, but why?
+        if (itemStack.getType() == Material.AIR)
+            return;
+
         Item     item = shop.getWorld().dropItem(spawnLocation, itemStack);
         ItemMeta meta = item.getItemStack().getItemMeta();
 
