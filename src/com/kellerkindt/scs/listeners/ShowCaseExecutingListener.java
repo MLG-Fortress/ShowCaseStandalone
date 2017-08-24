@@ -25,11 +25,13 @@
     import com.kellerkindt.scs.utilities.ItemStackUtilities;
     import com.kellerkindt.scs.utilities.MaterialNames;
     import com.kellerkindt.scs.utilities.Term;
+    import net.md_5.bungee.api.ChatColor;
     import org.bukkit.enchantments.Enchantment;
     import org.bukkit.entity.Player;
     import org.bukkit.event.EventException;
     import org.bukkit.event.EventHandler;
     import org.bukkit.event.EventPriority;
+    import org.bukkit.inventory.ItemStack;
 
     import java.util.Map.Entry;
 
@@ -61,6 +63,21 @@
                         scie.getPlayer(),
                         line
                 );
+            }
+
+            //RoboMWM - also print lore, enchantments
+            ItemStack itemStack = scie.getShop().getItemStack();
+            if (!itemStack.getEnchantments().isEmpty())
+            {
+                scs.sendMessage(scie.getPlayer(), "&bEnchantments: ");
+                for (Enchantment enchantment : itemStack.getEnchantments().keySet())
+                    scs.sendMessage(scie.getPlayer(), ChatColor.AQUA + enchantment.getName() + " at level " + itemStack.getEnchantments().get(enchantment).toString());
+            }
+            if (itemStack.getItemMeta().hasLore())
+            {
+                scs.sendMessage(scie.getPlayer(), "&5Lore: ");
+                for (String line : itemStack.getItemMeta().getLore())
+                    scs.sendMessage(scie.getPlayer(), line);
             }
         }
 
