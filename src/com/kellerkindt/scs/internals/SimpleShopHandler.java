@@ -50,6 +50,7 @@ import org.bukkit.util.Vector;
 import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class SimpleShopHandler implements ShopHandler, Listener {
@@ -737,6 +738,13 @@ public class SimpleShopHandler implements ShopHandler, Listener {
         Location     spawnLocation    = event.getLocation();
         ItemStack    itemStack        = shop.getItemStack().clone();
 
+        //This has been occurring recently, but why?
+        if (itemStack.getType() == Material.AIR)
+        {
+            scs.getLogger().warning("Unable to spawn an item.\n" + shop.toString());
+            return;
+        }
+
         if (scs.getConfiguration().isSpawningToMax()) {
             itemStack.setAmount(itemStack.getMaxStackSize());
 
@@ -753,10 +761,6 @@ public class SimpleShopHandler implements ShopHandler, Listener {
                 itemStack.setAmount(1);
             }
         }
-
-        //This has been occurring recently, but why?
-        if (itemStack.getType() == Material.AIR)
-            return;
 
         Item     item = shop.getWorld().dropItem(spawnLocation, itemStack);
         ItemMeta meta = item.getItemStack().getItemMeta();

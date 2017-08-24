@@ -171,7 +171,6 @@ public class YamlShopStorage extends SimpleThreaded<YamlShopStorage.Type, Shop> 
                     Shop     shop     = (Shop)conf.get(PATH_SHOP);
                     int      version  =  conf.getInt  (PATH_VERSION, 6); // 6, since this was introduced at version 7
 
-                    System.out.println("[SCS] " + shop.toString());
                     if (shop != null) {
                         shops.add(shop);
                     }
