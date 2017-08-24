@@ -90,19 +90,6 @@ public class BlockListener implements Listener{
     public void onBlockBreak (BlockBreakEvent e) {    
         e.setCancelled(!deleteShop(e.getPlayer(), e.getBlock()));
     }
-
-    //Unfortunately not fired for cases of blocks breaking because of the block underneath being broken...
-    @EventHandler(ignoreCancelled = true)
-    private void onBlockChange(BlockFromToEvent event)
-    {
-        if (!scs.getShopHandler().isShopBlock(event.getBlock()))
-            return;
-        if (event.getToBlock().getType() != Material.AIR)
-            return;
-        event.setCancelled(true);
-    }
-    
-
     
     @EventHandler (priority = EventPriority.NORMAL)
     public void onHangingPlaced (HangingPlaceEvent event) {
