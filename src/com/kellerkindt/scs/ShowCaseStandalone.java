@@ -69,7 +69,6 @@ public class ShowCaseStandalone extends JavaPlugin {
     private Permission  permission         = null;
     private Balance     balance            = null;
 
-    private MetricsHandler          metricsHandler  = null;
     private ShopHandler             shopHandler     = null;
     private PlayerSessionHandler    sessionHandler  = null;
     private PriceRangeHandler       priceHandler    = null;
