@@ -998,7 +998,7 @@ public abstract class Shop<T extends Shop<?>> extends SimpleChangeable<T> implem
      */
     @Override
     public String toString() {
-        return getClass().getSimpleName()+"[uid="+ id +",owner="+owner+"]@"+hashCode();
+        return getClass().getSimpleName()+"[uid="+ id +",owner="+owner+"]@"+hashCode()+"\nitem:\n"+itemStack.toString();
     }
 }
 
