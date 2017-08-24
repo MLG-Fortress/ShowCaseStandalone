@@ -738,29 +738,23 @@ public class SimpleShopHandler implements ShopHandler, Listener {
         Location     spawnLocation    = event.getLocation();
         ItemStack    itemStack        = shop.getItemStack().clone();
 
-        //This has been occurring recently, but why?
-        if (itemStack.getType() == Material.AIR)
-        {
-            scs.getLogger().warning("Unable to spawn an item.\n" + shop.toString());
-            return;
-        }
-
-        if (scs.getConfiguration().isSpawningToMax()) {
-            itemStack.setAmount(itemStack.getMaxStackSize());
-
-        } else {
-                /*
-                 *  barrier 1, an amount of 0 does not cause any pickup event (seems to be so)
-                 *  !! Mobs can pick the Item up, but do not drop it, since it has an amount of 0,
-                 *     although they can use it ^^
-                 */
-            itemStack.setAmount(scs.getConfiguration().getSpawnCount());
-
-            // since mc 1.11 an amount of zero does not seem to work anymore?
-            if (itemStack.getAmount() == 0) {
-                itemStack.setAmount(1);
-            }
-        }
+        //changing the itemStack size to 0 will mysteriously turn the itemstack into AIR... must be a recent spigot change?
+//        if (scs.getConfiguration().isSpawningToMax()) {
+//            itemStack.setAmount(itemStack.getMaxStackSize());
+//
+//        } else {
+//                /*
+//                 *  barrier 1, an amount of 0 does not cause any pickup event (seems to be so)
+//                 *  !! Mobs can pick the Item up, but do not drop it, since it has an amount of 0,
+//                 *     although they can use it ^^
+//                 */
+//            itemStack.setAmount(scs.getConfiguration().getSpawnCount());
+//
+//            // since mc 1.11 an amount of zero does not seem to work anymore?
+//            if (itemStack.getAmount() == 0) {
+//                itemStack.setAmount(1);
+//            }
+//        }
 
         Item     item = shop.getWorld().dropItem(spawnLocation, itemStack);
         ItemMeta meta = item.getItemStack().getItemMeta();
