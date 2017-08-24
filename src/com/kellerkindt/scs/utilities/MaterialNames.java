@@ -40,7 +40,10 @@ public class MaterialNames {
         if (stack.getItemMeta().hasDisplayName()) {
             return stack.getItemMeta().getDisplayName();
         }
-        
+        return stack.getI18NDisplayName();
+
+        //And goodbye below, lol
+        /*
         switch(id) {
             default:
                 ItemMeta itemMeta = stack.getItemMeta();
@@ -574,5 +577,6 @@ public class MaterialNames {
             case 2265: return "Ward Music Disc";
             case 2266: return "11 Music Disc";
         }
+        */
     }
 }
