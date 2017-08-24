@@ -23,10 +23,13 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFormEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -85,9 +88,18 @@ public class BlockListener implements Listener{
     
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onBlockBreak (BlockBreakEvent e) {    
-        if ( scs.getShopHandler().isShopBlock(e.getBlock())) {
-            e.setCancelled(true);
-        }
+        e.setCancelled(!deleteShop(e.getPlayer(), e.getBlock()));
+    }
+
+    //Unfortunately not fired for cases of blocks breaking because of the block underneath being broken...
+    @EventHandler(ignoreCancelled = true)
+    private void onBlockChange(BlockFromToEvent event)
+    {
+        if (!scs.getShopHandler().isShopBlock(event.getBlock()))
+            return;
+        if (event.getToBlock().getType() != Material.AIR)
+            return;
+        event.setCancelled(true);
     }
     
 
@@ -142,6 +154,24 @@ public class BlockListener implements Listener{
         if ( scs.getShopHandler().isShopBlock(e.getRetractLocation().getBlock()) ) {
             e.setCancelled(true);
         }
+    }
+
+    /**
+     * Delete a shop if the specified block is a shop, and the player is the owner
+     * @param player
+     * @param block
+     * @return true if there is a shop and the player is the owner (and thus successfully deleted)
+     */
+    private boolean deleteShop(Player player, Block block)
+    {
+        if (!scs.getShopHandler().isShopBlock(block))
+            return false;
+        if (scs.getShopHandler().getShop(block).getOwnerId().equals(player.getUniqueId()))
+        {
+            scs.getShopHandler().removeShop(scs.getShopHandler().getShop(block));
+            return true;
+        }
+        return false;
     }
 
 }
