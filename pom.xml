@@ -146,8 +146,8 @@
   
   <repositories>
       <repository>
-          <id>spigot-repo</id>
-          <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+          <id>paper-repo</id>
+          <url> https://repo.destroystokyo.com/repository/maven-public/</url>
       </repository>
       
       <!-- essentials -->
@@ -173,18 +173,10 @@
       
       <!-- BUKKIT -->
       <dependency>
-          <groupId>org.bukkit</groupId>
-          <artifactId>bukkit</artifactId>
+          <groupId>com.destroystokyo.paper</groupId>
+          <artifactId>paper-api</artifactId>
           <scope>provided</scope>
-          <version>1.11-R0.1-SNAPSHOT</version>
-      </dependency>
-      
-      <!-- mcstats / metrics -->
-      <dependency>
-          <groupId>org.mcstats.bukkit</groupId>
-          <artifactId>metrics</artifactId>
-          <version>R8-SNAPSHOT</version>
-          <!-- <scope>compile</scope> -->
+          <version>1.12-R0.1-SNAPSHOT</version>
       </dependency>
       
       <!-- essentials -->
@@ -217,90 +209,7 @@
           <artifactId>worldguard</artifactId>
           <scope>provided</scope>
           <version>6.1.1-SNAPSHOT</version>
-      </dependency>      
-      
-      <!-- local -->
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>BOSEconomy</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/BOSEconomy.jar</systemPath>
-      </dependency>      
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>DropChest</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/DropChest.jar</systemPath>
       </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>DropChest-0.8.2</artifactId>
-          <version>0.8.2</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/DropChest_0.8.2.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>DropChest-NH</artifactId>
-          <version>NH</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/DropChest-NH.jar</systemPath>
-      </dependency>
-      
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>HyperConomy</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/HyperConomy.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>iConomy</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/iConomy.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>iConomy6</artifactId>
-          <version>6</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/iConomy6.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>iConomy8</artifactId>
-          <version>8</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/iConomy8.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>Residence</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/Residence.jar</systemPath>
-      </dependency>
-      
-      <dependency>
-          <groupId>local</groupId>
-          <artifactId>Towny</artifactId>
-          <version>UNKNOWN</version>
-          <scope>system</scope>
-          <systemPath>${project.basedir}/lib/Towny.jar</systemPath>
-      </dependency>
-
 
       <dependency>
           <groupId>local</groupId>
@@ -311,34 +220,4 @@
       </dependency>
       
   </dependencies>
-  
-  <profiles>
-    <profile>
-       <id>upstream</id>
-       <repositories>
-          <repository>
-             <id>upstream</id>
-             <url>${env.Jenkins.Repository}</url>
-             <releases>
-                 <enabled>true</enabled>
-             </releases>
-             <snapshots>
-                <enabled>true</enabled>
-             </snapshots>
-          </repository>
-        </repositories>
-     <pluginRepositories>
-        <pluginRepository>
-              <id>upstream</id>
-              <url>${env.Jenkins.Repository}</url>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-              <snapshots>
-                <enabled>true</enabled>
-             </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-    </profile>
-  </profiles>
 </project>
