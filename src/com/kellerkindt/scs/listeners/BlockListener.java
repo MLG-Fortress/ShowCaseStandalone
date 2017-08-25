@@ -18,6 +18,7 @@
 package com.kellerkindt.scs.listeners;
 
 import com.kellerkindt.scs.exceptions.InsufficientPermissionException;
+import com.kellerkindt.scs.shops.Shop;
 import com.kellerkindt.scs.utilities.Term;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -87,8 +88,10 @@ public class BlockListener implements Listener{
     
     
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
-    public void onBlockBreak (BlockBreakEvent e) {    
-        e.setCancelled(!deleteShop(e.getPlayer(), e.getBlock()));
+    public void onBlockBreak (BlockBreakEvent e) {
+        if (!scs.getShopHandler().isShopBlock(e.getBlock()))
+            return;
+        e.setCancelled(!deleteShop(scs.getShopHandler().getShop(e.getBlock()), e.getPlayer()));
     }
     
     @EventHandler (priority = EventPriority.NORMAL)
@@ -146,16 +149,13 @@ public class BlockListener implements Listener{
     /**
      * Delete a shop if the specified block is a shop, and the player is the owner
      * @param player
-     * @param block
      * @return true if there is a shop and the player is the owner (and thus successfully deleted)
      */
-    private boolean deleteShop(Player player, Block block)
+    private boolean deleteShop(Shop shop, Player player)
     {
-        if (!scs.getShopHandler().isShopBlock(block))
-            return false;
-        if (scs.getShopHandler().getShop(block).getOwnerId().equals(player.getUniqueId()))
+        if (shop.getOwnerId().equals(player.getUniqueId()))
         {
-            scs.getShopHandler().removeShop(scs.getShopHandler().getShop(block));
+            scs.getShopHandler().removeShop(shop);
             return true;
         }
         return false;
