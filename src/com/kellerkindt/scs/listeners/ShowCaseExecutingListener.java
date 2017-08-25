@@ -77,12 +77,11 @@
             this.scs    = scs;
             try
             {
-                asNMSCopy = ReflectionHandler.getMethod("CraftItemStack", ReflectionHandler.PackageType.CRAFTBUKKIT_INVENTORY, "asNMSCopy");
+                asNMSCopy = ReflectionHandler.getMethod("CraftItemStack", ReflectionHandler.PackageType.CRAFTBUKKIT_INVENTORY, "asNMSCopy", ItemStack.class);
                 NBTTagCompoundClazz = ReflectionHandler.PackageType.MINECRAFT_SERVER.getClass("NBTTagCompoundClazz");
                 saveNMSItemStack = ReflectionHandler.getMethod(asNMSCopy.getClass(), "save", NBTTagCompoundClazz);
             }
             catch (Exception ignored){}
-
         }
 
         /**
