@@ -81,7 +81,11 @@
                 NBTTagCompoundClazz = ReflectionHandler.PackageType.MINECRAFT_SERVER.getClass("NBTTagCompoundClazz");
                 saveNMSItemStack = ReflectionHandler.getMethod("ItemStack", ReflectionHandler.PackageType.MINECRAFT_SERVER, "save", NBTTagCompoundClazz);
             }
-            catch (Exception ignored){}
+            catch (Exception e)
+            {
+                scs.getLogger().warning("Ur reflection sux lol, no items4u");
+                e.printStackTrace();
+            }
         }
 
         /**
