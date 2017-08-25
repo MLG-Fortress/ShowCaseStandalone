@@ -17,23 +17,45 @@
  */
     package com.kellerkindt.scs.listeners;
 
+    import com.kellerkindt.scs.ReflectionHandler;
     import com.kellerkindt.scs.ShowCaseStandalone;
-    import com.kellerkindt.scs.events.*;
+    import com.kellerkindt.scs.events.ShowCaseCreateEvent;
+    import com.kellerkindt.scs.events.ShowCaseDeleteEvent;
+    import com.kellerkindt.scs.events.ShowCaseEvent;
+    import com.kellerkindt.scs.events.ShowCaseInfoEvent;
+    import com.kellerkindt.scs.events.ShowCaseInteractEvent;
+    import com.kellerkindt.scs.events.ShowCaseItemAddEvent;
+    import com.kellerkindt.scs.events.ShowCaseItemRemoveEvent;
+    import com.kellerkindt.scs.events.ShowCaseLimitEvent;
+    import com.kellerkindt.scs.events.ShowCaseMemberAddEvent;
+    import com.kellerkindt.scs.events.ShowCaseMemberRemoveEvent;
+    import com.kellerkindt.scs.events.ShowCaseOwnerSetEvent;
+    import com.kellerkindt.scs.events.ShowCasePlayerBuyEvent;
+    import com.kellerkindt.scs.events.ShowCasePlayerExchangeEvent;
+    import com.kellerkindt.scs.events.ShowCasePlayerSellEvent;
+    import com.kellerkindt.scs.events.ShowCasePriceSetEvent;
+    import com.kellerkindt.scs.events.ShowCaseRemoveEvent;
     import com.kellerkindt.scs.interfaces.ShowCaseListener;
     import com.kellerkindt.scs.internals.NamedUUID;
-    import com.kellerkindt.scs.shops.*;
+    import com.kellerkindt.scs.shops.BuyShop;
+    import com.kellerkindt.scs.shops.DisplayShop;
+    import com.kellerkindt.scs.shops.ExchangeShop;
+    import com.kellerkindt.scs.shops.SellShop;
+    import com.kellerkindt.scs.shops.Shop;
     import com.kellerkindt.scs.utilities.ItemStackUtilities;
     import com.kellerkindt.scs.utilities.MaterialNames;
     import com.kellerkindt.scs.utilities.Term;
-    import net.md_5.bungee.api.ChatColor;
+    import net.md_5.bungee.api.chat.BaseComponent;
+    import net.md_5.bungee.api.chat.HoverEvent;
+    import net.md_5.bungee.api.chat.TextComponent;
+    import org.bukkit.ChatColor;
     import org.bukkit.enchantments.Enchantment;
     import org.bukkit.entity.Player;
-    import org.bukkit.event.EventException;
     import org.bukkit.event.EventHandler;
     import org.bukkit.event.EventPriority;
     import org.bukkit.inventory.ItemStack;
 
-    import java.util.Map.Entry;
+    import java.lang.reflect.Method;
 
     /**
      * This class executes the request behind the event
@@ -47,8 +69,20 @@
 
         private ShowCaseStandalone scs;
 
+        Method asNMSCopy; //CraftItemStack#asNMSCopy(ItemStack);
+        Method saveNMSItemStack; //n.m.s.Inventory.ItemStack#save(compound);
+        Class<?> NBTTagCompoundClazz; //n.m.s.NBTTagCompound;
+
         public ShowCaseExecutingListener (ShowCaseStandalone scs) {
             this.scs    = scs;
+            try
+            {
+                asNMSCopy = ReflectionHandler.getMethod("CraftItemStack", ReflectionHandler.PackageType.CRAFTBUKKIT_INVENTORY, "asNMSCopy");
+                NBTTagCompoundClazz = ReflectionHandler.PackageType.MINECRAFT_SERVER.getClass("NBTTagCompoundClazz");
+                saveNMSItemStack = ReflectionHandler.getMethod(asNMSCopy.getClass(), "save", NBTTagCompoundClazz);
+            }
+            catch (Exception ignored){}
+
         }
 
         /**
@@ -65,20 +99,30 @@
                 );
             }
 
-            //RoboMWM - also print lore, enchantments
+            //Send player the item information in a json hover message
+            //It's generally not fun diving into NMSland...
             ItemStack itemStack = scie.getShop().getItemStack();
-            if (!itemStack.getEnchantments().isEmpty())
+            String json;
+            try
             {
-                scs.sendMessage(scie.getPlayer(), "&bEnchantments: ");
-                for (Enchantment enchantment : itemStack.getEnchantments().keySet())
-                    scs.sendMessage(scie.getPlayer(), ChatColor.AQUA + enchantment.getName() + " at level " + itemStack.getEnchantments().get(enchantment).toString());
+                Object nmsItemStack = asNMSCopy.invoke(null, itemStack); //CraftItemStack#asNMSCopy(itemStack); //nms version of the ItemStack
+                Object nbtTagCompound = NBTTagCompoundClazz.newInstance(); //new NBTTagCompoundClazz(); //get a new NBTTagCompound, which will contain the nmsItemStack.
+                nbtTagCompound = saveNMSItemStack.invoke(nmsItemStack, nbtTagCompound); //nmsItemStack#save(nbtTagCompound); //saves nmsItemStack into our new NBTTagCompound
+                json = nbtTagCompound.toString();
             }
-            if (itemStack.getItemMeta().hasLore())
+            catch (Exception e)
             {
-                scs.sendMessage(scie.getPlayer(), "&5Lore: ");
-                for (String line : itemStack.getItemMeta().getLore())
-                    scs.sendMessage(scie.getPlayer(), line);
+                return;
             }
+
+            BaseComponent[] hoverEventComponents = new BaseComponent[]
+                    {
+                            new TextComponent(json)
+                    };
+            HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
+            TextComponent text = new TextComponent(ChatColor.AQUA + "[Hover for item info]");
+            text.setHoverEvent(hover);
+            scie.getPlayer().sendMessage(text);
         }
 
         /**
