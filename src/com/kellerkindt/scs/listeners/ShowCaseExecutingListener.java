@@ -70,7 +70,7 @@
         private ShowCaseStandalone scs;
 
         Method asNMSCopy; //CraftItemStack#asNMSCopy(ItemStack);
-        Method saveNMSItemStack; //n.m.s.Inventory.ItemStack#save(compound);
+        Method saveNMSItemStack; //n.m.s.ItemStack#save(compound);
         Class<?> NBTTagCompoundClazz; //n.m.s.NBTTagCompound;
 
         public ShowCaseExecutingListener (ShowCaseStandalone scs) {
@@ -79,7 +79,7 @@
             {
                 asNMSCopy = ReflectionHandler.getMethod("CraftItemStack", ReflectionHandler.PackageType.CRAFTBUKKIT_INVENTORY, "asNMSCopy", ItemStack.class);
                 NBTTagCompoundClazz = ReflectionHandler.PackageType.MINECRAFT_SERVER.getClass("NBTTagCompoundClazz");
-                saveNMSItemStack = ReflectionHandler.getMethod(asNMSCopy.getClass(), "save", NBTTagCompoundClazz);
+                saveNMSItemStack = ReflectionHandler.getMethod("ItemStack", ReflectionHandler.PackageType.MINECRAFT_SERVER, "save", NBTTagCompoundClazz);
             }
             catch (Exception ignored){}
         }
