@@ -128,6 +128,11 @@
             TextComponent text = new TextComponent(textToSend);
             text.setHoverEvent(hover);
             scie.getPlayer().sendMessage(text);
+
+            if (scie.getPlayer().getUniqueId().equals(scie.getShop().getOwnerId()))
+            {
+                //TODO: print statistics
+            }
         }
 
         /**
