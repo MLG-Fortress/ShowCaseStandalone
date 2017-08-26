@@ -125,7 +125,7 @@
                             new TextComponent(json)
                     };
             HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
-            TextComponent text = new TextComponent(textToSend);
+            TextComponent text = new TextComponent(TextComponent.fromLegacyText(textToSend));
             text.setHoverEvent(hover);
             scie.getPlayer().sendMessage(text);
         }
