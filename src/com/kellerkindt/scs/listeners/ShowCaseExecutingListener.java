@@ -44,6 +44,7 @@
     import com.kellerkindt.scs.shops.Shop;
     import com.kellerkindt.scs.utilities.ItemStackUtilities;
     import com.kellerkindt.scs.utilities.MaterialNames;
+    import com.kellerkindt.scs.utilities.Messaging;
     import com.kellerkindt.scs.utilities.Term;
     import net.md_5.bungee.api.chat.BaseComponent;
     import net.md_5.bungee.api.chat.HoverEvent;
@@ -95,12 +96,13 @@
         @EventHandler (ignoreCancelled=true, priority=EventPriority.MONITOR)    // monitor is to check the outcome (http://wiki.bukkit.org/Event_API_Reference)
         public void onShowCaseInfoEvent (ShowCaseInfoEvent scie) {
 
-            for (String line : scie.getShop().getDescription()) {
-                scs.sendMessage(
-                        scie.getPlayer(),
-                        line
-                );
-            }
+            String textToSend = Messaging.colorize(scie.getShop().getDescription().get(0));
+//            for (String line : scie.getShop().getDescription()) {
+//                scs.sendMessage(
+//                        scie.getPlayer(),
+//                        line
+//                );
+//            }
 
             //Send player the item information in a json hover message
             //It's generally not fun diving into NMSland...
@@ -123,7 +125,7 @@
                             new TextComponent(json)
                     };
             HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
-            TextComponent text = new TextComponent(ChatColor.AQUA + "[Hover for item info]");
+            TextComponent text = new TextComponent(textToSend);
             text.setHoverEvent(hover);
             scie.getPlayer().sendMessage(text);
         }
