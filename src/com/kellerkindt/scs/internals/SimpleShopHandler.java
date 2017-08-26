@@ -590,6 +590,13 @@ public class SimpleShopHandler implements ShopHandler, Listener {
                 scs.getLogger().info("Ignoring broken shop");
                 continue;
             }
+            // is shop on a valid, non-air block?
+            if (p.getBlock().getType() == Material.AIR)
+            {
+                scs.getLogger().warning("Shop's block doesn't exist, deleting it.\n" + p.toString());
+                storageHandler.delete(p);
+                continue;
+            }
             
             addShop(p, replace);
         }

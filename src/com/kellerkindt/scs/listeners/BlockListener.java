@@ -89,9 +89,8 @@ public class BlockListener implements Listener{
     
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
     public void onBlockBreak (BlockBreakEvent e) {
-        if (!scs.getShopHandler().isShopBlock(e.getBlock()))
-            return;
-        e.setCancelled(!deleteShop(scs.getShopHandler().getShop(e.getBlock()), e.getPlayer()));
+        if (scs.getShopHandler().isShopBlock(e.getBlock()))
+            e.setCancelled(true);
     }
     
     @EventHandler (priority = EventPriority.NORMAL)
