@@ -96,7 +96,7 @@
         @EventHandler (ignoreCancelled=true, priority=EventPriority.MONITOR)    // monitor is to check the outcome (http://wiki.bukkit.org/Event_API_Reference)
         public void onShowCaseInfoEvent (ShowCaseInfoEvent scie) {
 
-            String textToSend = Messaging.parse(scie.getShop().getDescription().get(0));
+            String textToSend = ChatColor.translateAlternateColorCodes('&', scie.getShop().getDescription().get(0));
 //            for (String line : scie.getShop().getDescription()) {
 //                scs.sendMessage(
 //                        scie.getPlayer(),
