@@ -96,7 +96,7 @@
         @EventHandler (ignoreCancelled=true, priority=EventPriority.MONITOR)    // monitor is to check the outcome (http://wiki.bukkit.org/Event_API_Reference)
         public void onShowCaseInfoEvent (ShowCaseInfoEvent scie) {
 
-            String textToSend = Messaging.colorize(scie.getShop().getDescription().get(0));
+            String textToSend = Messaging.parse(scie.getShop().getDescription().get(0));
 //            for (String line : scie.getShop().getDescription()) {
 //                scs.sendMessage(
 //                        scie.getPlayer(),
@@ -125,7 +125,7 @@
                             new TextComponent(json)
                     };
             HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
-            TextComponent text = new TextComponent(TextComponent.fromLegacyText(textToSend));
+            TextComponent text = new TextComponent(textToSend);
             text.setHoverEvent(hover);
             scie.getPlayer().sendMessage(text);
         }
